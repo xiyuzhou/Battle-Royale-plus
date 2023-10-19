@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviourPun
     // instance
     public static GameManager instance;
     public float postGameTime;
-
+    public bool ready = false;
     void Awake()
     {
         instance = this;
@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviourPun
         players = new PlayerStatus[PhotonNetwork.PlayerList.Length];
         alivePlayers = players.Length;
         photonView.RPC("ImInGame", RpcTarget.AllBuffered);
+        ready = true;
     }
 
     [PunRPC]
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviourPun
         playersInGame++;
         if (PhotonNetwork.IsMasterClient && playersInGame == PhotonNetwork.PlayerList.Length)
             photonView.RPC("SpawnPlayer", RpcTarget.All);
+
     }
     [PunRPC]
     void SpawnPlayer()

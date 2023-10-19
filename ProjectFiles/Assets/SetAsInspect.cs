@@ -8,6 +8,8 @@ public class SetAsInspect : MonoBehaviour
     private float rotX;
     private float rotY;
     private bool isSpectator;
+    [SerializeField]
+    private GameObject gun;
     void Update()
     {
         if (isSpectator)
@@ -35,5 +37,6 @@ public class SetAsInspect : MonoBehaviour
     {
         isSpectator = true;
         transform.parent = null;
+        gun.SetActive(false);
     }
 }

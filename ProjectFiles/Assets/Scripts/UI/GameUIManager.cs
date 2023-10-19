@@ -103,6 +103,7 @@ public class GameUIManager : MonoBehaviour
     public void UpdateInteractText(string promptMessage)
     {
         promptText.text = promptMessage;
+        Debug.Log(promptMessage);
     }
 
     public void UpdateBulletInfo(int bulletsLeft, int totalAmmo)

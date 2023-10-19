@@ -2,7 +2,9 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem.HID;
 using Photon.Pun;
-public class GunSystem : MonoBehaviour
+using System.Drawing;
+
+public class GunSystem : MonoBehaviourPunCallbacks
 {
     //Gun stats
     public float damage;
@@ -83,13 +85,14 @@ public class GunSystem : MonoBehaviour
             }             
             else if (rayHit.collider.CompareTag("Ground"))
             {
-                
-                Instantiate(bulletHoleGraphic, rayHit.point, rotation);
-                Instantiate(sandGraphic, rayHit.point, Quaternion.Euler(0, 180, 0));
+                photonView.RPC("BulletHoleEffect", RpcTarget.AllBuffered, rayHit.point, rotation);
+                //Instantiate(bulletHoleGraphic, rayHit.point, rotation);
+                //Instantiate(sandGraphic, rayHit.point, Quaternion.Euler(0, 180, 0));
             }
             else
             {
-                Instantiate(bulletHoleGraphic, rayHit.point, rotation);
+                //Instantiate(bulletHoleGraphic, rayHit.point, rotation);
+                photonView.RPC("BulletHoleEffect", RpcTarget.AllBuffered,rayHit.point,rotation);
             }
 
             //if (rayHit.collider.CompareTag("Enemy"))
@@ -101,7 +104,7 @@ public class GunSystem : MonoBehaviour
         }
         //Graphics
 
-        muzzleFlash.Play();
+        photonView.RPC("PlayMuzzleFlash", RpcTarget.AllBuffered);
 
         bulletsLeft--;
         bulletsShot--;
@@ -111,16 +114,28 @@ public class GunSystem : MonoBehaviour
         if (bulletsShot > 0 && bulletsLeft > 0)
             Invoke("Shoot", timeBetweenShots);
     }
+    [PunRPC]
+    private void BulletHoleEffect(Vector3 hitPosition, Quaternion rotation)
+    {
+        Instantiate(bulletHoleGraphic, hitPosition, rotation);
+        Instantiate(sandGraphic, hitPosition, Quaternion.Euler(0, 180, 0));
+    }
+    [PunRPC]
+    private void PlayMuzzleFlash()
+    {
+        muzzleFlash.Play();
+    }
     private void ResetShot()
     {
         readyToShoot = true;
     }
     public void Reload()
     {
-        if(totalAmmo > 0 && !reloading)
+        if(totalAmmo > 0 && !reloading && bulletsLeft < magazineSize)
         {
             reloading = true;
             animator.SetTrigger("ReloadTrigger");
+            animator.SetBool("ReloadBool", true);
             Invoke("ReloadFinished", reloadTime);
         }
     }
@@ -129,6 +144,7 @@ public class GunSystem : MonoBehaviour
         int total = bulletsLeft + totalAmmo;
         bulletsLeft = total > magazineSize ? magazineSize: total;
         totalAmmo = total - bulletsLeft;
+        animator.SetBool("ReloadBool", false);
         reloading = false;
         updateAmmoUI();
     }
