@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PhotonServerSettings
   m_EditorClassIdentifier: 
   AppSettings:
-    AppIdRealtime: 87a0297b-b2d5-4c09-a886-b32f3f6cb48c
+    AppIdRealtime: 0e465e18-e337-4a0c-9bcd-9de87aab93ae
     AppIdFusion: 
     AppIdChat: 
     AppIdVoice: 
@@ -37,18 +37,16 @@ MonoBehaviour:
   - ClickRpc
   - DestroyRpc
   - ChangeScene
-  - ImInGame
-  - Initialize
-  - SpawnPlayer
   - UpdateLobbyUI
-  - WinGame
-  - SetChildObjectVisibility
-  - OnHealChange
-  - Die
-  - GainAmmo
-  - updateText
-  - PlayMuzzleFlash
-  - BulletHoleEffect
+  - ImInGame
+  - GiveGold
+  - Heal
+  - Initialize
+  - TakeDamage
+  - UpdateHealthBar
+  - RotationHandler
+  - Log
+  - FlashDamage
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
